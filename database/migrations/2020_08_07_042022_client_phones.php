@@ -15,7 +15,7 @@ class ClientPhones extends Migration
     {
         Schema::create('client_phones', function (Blueprint $table) {
             $table->id();
-            $table->integer('client_id')->unsigned();
+            $table->bigInteger('client_id')->unsigned();
             $table->string('phone');
             $table->timestamps();
             $table->foreign('client_id')

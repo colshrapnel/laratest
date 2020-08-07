@@ -15,7 +15,7 @@ class ClientEmails extends Migration
     {
         Schema::create('client_emails', function (Blueprint $table) {
             $table->id();
-            $table->integer('client_id')->unsigned();
+            $table->bigInteger('client_id')->unsigned();
             $table->string('email');
             $table->timestamps();
             $table->foreign('client_id')
