@@ -39,4 +39,27 @@ class Client extends Model
             }
         });
     }
+    public function overwrite($request)
+    {
+        DB::transaction(function() use ($request)
+        {
+            $this->phones()->delete();
+            $this->emails()->delete();
+
+            $this->firstname = $request->firstname;
+            $this->lastname = $request->lastname;
+            $this->save();
+
+            foreach($request->phones as $row) {
+                $phone = new ClientPhone();
+                $phone->phone = $row;
+                $this->phones()->save($phone);
+            }
+            foreach($request->emails as $row) {
+                $email = new ClientEmail();
+                $email->email = $row;
+                $this->emails()->save($email);
+            }
+        });
+    }
 }

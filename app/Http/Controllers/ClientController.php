@@ -67,7 +67,22 @@ class ClientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rules = [
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'emails' => 'array|required',
+            'emails.*' => 'email|required',
+            'phones' => 'array|required',
+            'phones.*' => 'regex:/^\+\d+\(\d+\)[\d-]+$/',
+        ];
+        $validator = \Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $response = ['errors' => $validator->messages()];
+            return response()->json($response,Response::HTTP_BAD_REQUEST);
+        }else {
+            $client = Client::findOrFail($id);
+            $client->overwrite($request);
+        }
     }
 
     /**

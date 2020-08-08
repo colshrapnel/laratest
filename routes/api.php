@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('client',ClientController::class.'@store');
 Route::get('client/{id}',ClientController::class.'@show');
 Route::delete('client/{id}',ClientController::class.'@destroy');
+Route::put('client/{id}',ClientController::class.'@update');
