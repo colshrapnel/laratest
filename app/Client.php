@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Client extends Model
 {
@@ -17,5 +18,25 @@ class Client extends Model
     public function emails()
     {
         return $this->hasMany(ClientEmail::class);
+    }
+    public function store($request)
+    {
+        DB::transaction(function() use ($request)
+        {
+            $this->firstname = $request->firstname;
+            $this->lastname = $request->lastname;
+            $this->save();
+
+            foreach($request->phones as $row) {
+                $phone = new ClientPhone();
+                $phone->phone = $row;
+                $this->phones()->save($phone);
+            }
+            foreach($request->emails as $row) {
+                $email = new ClientEmail();
+                $email->email = $row;
+                $this->phones()->save($email);
+            }
+        });
     }
 }
