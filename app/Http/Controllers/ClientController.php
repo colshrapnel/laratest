@@ -65,7 +65,7 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        return new ClientResource(Client::find($id));
+        return new ClientResource(Client::findOrFail($id));
     }
 
     /**
@@ -99,6 +99,7 @@ class ClientController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $client = Client::findOrFail($id);
+        $client->delete();
     }
 }
