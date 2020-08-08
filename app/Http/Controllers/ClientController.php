@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Client;
 use Illuminate\Http\Response;
+use App\Http\Resources\ClientResource;
 
 class ClientController extends Controller
 {
@@ -64,7 +65,7 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        //
+        return new ClientResource(Client::find($id));
     }
 
     /**

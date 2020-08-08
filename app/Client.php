@@ -35,7 +35,7 @@ class Client extends Model
             foreach($request->emails as $row) {
                 $email = new ClientEmail();
                 $email->email = $row;
-                $this->phones()->save($email);
+                $this->emails()->save($email);
             }
         });
     }
