@@ -7,6 +7,9 @@ use App\Client;
 use Illuminate\Http\Response;
 use App\Http\Resources\ClientResource;
 use App\Http\Requests\ClientStoreRequest;
+use App\Http\Requests\ClientSearchByNameRequest;
+use App\Http\Requests\ClientSearchByPhoneRequest;
+use App\Http\Requests\ClientSearchByEmailRequest;
 
 class ClientController extends Controller
 {
@@ -68,5 +71,47 @@ class ClientController extends Controller
     {
         $client = Client::findOrFail($id);
         $client->delete();
+    }
+
+    /**
+     * Search by name.
+     *
+     * @param  ClientSearchByNameRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function searchByName(ClientSearchByNameRequest $request)
+    {
+        $results = Client::where('firstname', $request->firstname)
+            ->where('lastname', $request->lastname)
+            ->paginate(10);
+        return ClientResource::collection($results);
+    }
+
+    /**
+     * Search by phone.
+     *
+     * @param  ClientSearchByPhoneRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function searchByPhone(ClientSearchByPhoneRequest $request)
+    {
+        $results = Client::whereHas('phones', function($query) use ($request){
+            $query->whereIn('phone', $request->phones);
+        })->paginate(10);
+        return ClientResource::collection($results);
+    }
+
+    /**
+     * Search by email.
+     *
+     * @param  ClientSearchByEmailRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function searchByEmail(ClientSearchByEmailRequest $request)
+    {
+        $results = Client::whereHas('emails', function($query) use ($request){
+            $query->whereIn('email', $request->emails);
+        })->paginate(10);
+        return ClientResource::collection($results);
     }
 }
