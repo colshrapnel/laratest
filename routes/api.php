@@ -24,5 +24,6 @@ Route::put('client/{id}',ClientController::class.'@update');
 Route::get('client/search/name',ClientController::class.'@searchByName');
 Route::get('client/search/phone',ClientController::class.'@searchByPhone');
 Route::get('client/search/email',ClientController::class.'@searchByEmail');
+Route::get('client/search/all',ClientController::class.'@searchByAll');
 #Route::get('client/search/{type}',ClientController::class.'@search')
 #    ->where('type', 'name|phone|email|all');

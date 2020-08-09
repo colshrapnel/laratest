@@ -13,6 +13,8 @@ use App\Http\Requests\ClientSearchByEmailRequest;
 
 class ClientController extends Controller
 {
+    const PAGINATION_LIMIT = 10;
+
     /**
      * Display a listing of the resource.
      *
@@ -83,7 +85,7 @@ class ClientController extends Controller
     {
         $results = Client::where('firstname', $request->firstname)
             ->where('lastname', $request->lastname)
-            ->paginate(10);
+            ->paginate(self::PAGINATION_LIMIT);
         return ClientResource::collection($results);
     }
 
@@ -97,7 +99,7 @@ class ClientController extends Controller
     {
         $results = Client::whereHas('phones', function($query) use ($request){
             $query->whereIn('phone', $request->phones);
-        })->paginate(10);
+        })->paginate(self::PAGINATION_LIMIT);
         return ClientResource::collection($results);
     }
 
@@ -111,7 +113,27 @@ class ClientController extends Controller
     {
         $results = Client::whereHas('emails', function($query) use ($request){
             $query->whereIn('email', $request->emails);
-        })->paginate(10);
+        })->paginate(self::PAGINATION_LIMIT);
+        return ClientResource::collection($results);
+    }
+
+    /**
+     * Search by all parameters.
+     *
+     * @param  ClientSearchByEmailRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function searchByAll(ClientStoreRequest $request)
+    {
+        $results = Client::where('firstname', $request->firstname)
+            ->where('lastname', $request->lastname)
+            ->whereHas('emails', function($query) use ($request){
+                $query->whereIn('email', $request->emails);
+            })
+            ->whereHas('phones', function($query) use ($request){
+                $query->whereIn('phone', $request->phones);
+            })
+            ->paginate(self::PAGINATION_LIMIT);
         return ClientResource::collection($results);
     }
 }
