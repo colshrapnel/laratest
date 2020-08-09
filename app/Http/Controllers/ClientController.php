@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Client;
 use Illuminate\Http\Response;
 use App\Http\Resources\ClientResource;
+use App\Http\Requests\ClientStoreRequest;
 
 class ClientController extends Controller
 {
@@ -25,26 +26,12 @@ class ClientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ClientStoreRequest $request)
     {
-        $rules = [
-            'firstname' => 'required|max:255',
-            'lastname' => 'required|max:255',
-            'emails' => 'array|required',
-            'emails.*' => 'email|required',
-            'phones' => 'array|required',
-            'phones.*' => 'regex:/^\+\d+\(\d+\)[\d-]+$/',
-        ];
-        $validator = \Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            $response = ['errors' => $validator->messages()];
-            return response()->json($response,Response::HTTP_BAD_REQUEST);
-        }else {
-            $client = new Client();
-            $client->store($request);
-            $response = ['id' => $client->id];
-            return response()->json($response);
-        }
+        $client = new Client();
+        $client->store($request);
+        $response = ['id' => $client->id];
+        return response()->json($response);
     }
 
     /**
@@ -65,24 +52,10 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ClientStoreRequest $request, $id)
     {
-        $rules = [
-            'firstname' => 'required|max:255',
-            'lastname' => 'required|max:255',
-            'emails' => 'array|required',
-            'emails.*' => 'email|required',
-            'phones' => 'array|required',
-            'phones.*' => 'regex:/^\+\d+\(\d+\)[\d-]+$/',
-        ];
-        $validator = \Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            $response = ['errors' => $validator->messages()];
-            return response()->json($response,Response::HTTP_BAD_REQUEST);
-        }else {
-            $client = Client::findOrFail($id);
-            $client->overwrite($request);
-        }
+        $client = Client::findOrFail($id);
+        $client->overwrite($request);
     }
 
     /**
